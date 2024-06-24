@@ -1,15 +1,10 @@
 radio.onReceivedNumber(function (receivedNumber) {
     if (receivedNumber == 14) {
-        Position1 = ServoSlow.setServoAngle(1, 51, 10, Position1, ServoSlow.ServoDirection.CCW)
-        Position2 = Nicken(Position2)
-        Position1 = ServoSlow.setServoAngle(1, 51, 10, Position1, ServoSlow.ServoDirection.CW)
+        motion1()
     } else if (receivedNumber == 13) {
-        Position1 = ServoSlow.setServoAngle(1, 51, 10, Position1, ServoSlow.ServoDirection.CW)
-        Position2 = Nicken(Position2)
-        Position1 = ServoSlow.setServoAngle(1, 51, 10, Position1, ServoSlow.ServoDirection.CCW)
+        motion2()
     } else if (receivedNumber == 0) {
-        ServoSlow.setServoPosition(1, 90)
-        ServoSlow.setServoPosition(2, 75)
+        Ausgangsposition()
     }
 })
 input.onButtonPressed(Button.A, function () {
@@ -49,6 +44,11 @@ function NaseBackground () {
     }
     basic.pause(500)
 }
+function motion2 () {
+    Position1 = ServoSlow.setServoAngle(1, 51, 10, Position1, ServoSlow.ServoDirection.CW)
+    Position2 = Nicken(Position2)
+    Position1 = ServoSlow.setServoAngle(1, 51, 10, Position1, ServoSlow.ServoDirection.CCW)
+}
 function NaseRGB () {
     pins.digitalWritePin(DigitalPin.P0, 1)
     basic.pause(1000)
@@ -64,10 +64,7 @@ function NaseRGB () {
     basic.pause(1000)
 }
 input.onButtonPressed(Button.AB, function () {
-    Position1 = 90
-    Position2 = 75
-    kitronik_simple_servo.setServoAngle(kitronik_simple_servo.ServoChoice.servo1, Position1)
-    kitronik_simple_servo.setServoAngle(kitronik_simple_servo.ServoChoice.servo2, Position2)
+    Ausgangsposition()
 })
 function Schuetteln (PositionX: number) {
     Position1 = ServoSlow.setServoAngle(1, 20, 10, PositionX, ServoSlow.ServoDirection.CCW)
@@ -83,14 +80,22 @@ function Schuetteln (PositionX: number) {
 input.onButtonPressed(Button.B, function () {
     Position1 = Schuetteln(Position1)
 })
+function Ausgangsposition () {
+    Position1 = 90
+    Position2 = 75
+    kitronik_simple_servo.setServoAngle(kitronik_simple_servo.ServoChoice.servo1, Position1)
+    kitronik_simple_servo.setServoAngle(kitronik_simple_servo.ServoChoice.servo2, Position2)
+}
+function motion1 () {
+    Position1 = ServoSlow.setServoAngle(1, 51, 10, Position1, ServoSlow.ServoDirection.CCW)
+    Position2 = Nicken(Position2)
+    Position1 = ServoSlow.setServoAngle(1, 51, 10, Position1, ServoSlow.ServoDirection.CW)
+}
+let Position1 = 0
 let Pin = 0
 let Position2 = 0
-let Position1 = 0
 radio.setGroup(1)
-Position1 = 90
-Position2 = 75
-kitronik_simple_servo.setServoAngle(kitronik_simple_servo.ServoChoice.servo1, Position1)
-kitronik_simple_servo.setServoAngle(kitronik_simple_servo.ServoChoice.servo2, Position2)
+Ausgangsposition()
 NaseRGB()
 control.inBackground(function () {
     while (true) {
